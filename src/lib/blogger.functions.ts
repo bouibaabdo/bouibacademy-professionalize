@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 
-const FEED_BASE = "https://www.bouibacademy.me/feeds/posts/default";
+const FEED_BASE = "https://academybouiba.blogspot.com/feeds/posts/default";
 
 export interface BloggerPost {
   id: string;
