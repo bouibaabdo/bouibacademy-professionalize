@@ -9,8 +9,7 @@
     "build:dev": "vite build --mode development",
     "preview": "vite preview",
     "lint": "eslint .",
-    "format": "prettier --write .",
-    "postinstall": "node patch-nft.js"
+    "format": "prettier --write ."
   },
   "dependencies": {
     "@fontsource/cairo": "^5.2.7",
