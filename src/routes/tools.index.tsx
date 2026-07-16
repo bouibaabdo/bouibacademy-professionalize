@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ImageIcon, FileText, Lightbulb, Languages, Search, Sparkles, Trophy } from "lucide-react";
+import { ImageIcon, FileText, Lightbulb, Languages, Search, Sparkles, Trophy, Map } from "lucide-react";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -14,6 +14,13 @@ const TOOLS = [
     title: "تحويل النص إلى صورة",
     desc: "أنشئ صورًا احترافية من وصف نصي بالعربية أو الإنجليزية باستخدام أحدث نماذج توليد الصور.",
     color: "from-blue-500/10 to-purple-500/10",
+  },
+  {
+    to: "/tools/roadmap",
+    icon: Map,
+    title: "مستشار مسارات التعلم (Roadmap)",
+    desc: "أدخل أي تخصص أو موضوع وسيقوم الـ AI بتوليد خريطة طريق تفاعلية ممتازة للتعلم مع مصادر مجانية.",
+    color: "from-violet-500/10 to-indigo-500/10",
   },
   {
     to: "/tools/summarize",

@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-type Action = "summarize" | "ideas" | "translate" | "seo";
+type Action = "summarize" | "ideas" | "translate" | "seo" | "roadmap";
 
 type Body = {
   action?: Action;
@@ -19,6 +19,31 @@ const SYSTEM: Record<Action, (b: Body) => string> = {
   },
   seo: () =>
     "أنت خبير SEO عربي. حلّل الموضوع التالي وأعد استجابة منسّقة بصيغة Markdown تحتوي على: عنوان SEO (أقل من 60 حرف)، وصف Meta (أقل من 160 حرف)، 10 كلمات مفتاحية مقترحة، وهيكل عناوين (H2/H3) مقترح للمقال.",
+  roadmap: () =>
+    `أنت خبير تعليمي ومستشار خرائط ذهنية ذكي ومحترف. قم بإنشاء خريطة ذهنية ومسار تعليمي (Roadmap) تفصيلي وتفاعلي حول الموضوع المدخل.
+يجب أن ترجع استجابتك بصيغة JSON صالحة بنسبة 100% فقط دون أي نصوص خارج الـ JSON.
+تنسيق الـ JSON المطلوب:
+{
+  "title": "عنوان مسار التعلم",
+  "description": "وصف موجز للمسار وأهميته",
+  "difficulty": "مبتدئ" | "متوسط" | "متقدم",
+  "duration": "المدة التقريبية المقترحة (مثال: 3 أشهر)",
+  "nodes": [
+    {
+      "id": "معرف فريد (مثال: step1)",
+      "label": "عنوان المرحلة أو الخطوة (مثال: أساسيات HTML)",
+      "description": "شرح مبسط ومختصر لما سيتعلمه الطالب في هذه الخطوة",
+      "duration": "المدة المقترحة لهذه الخطوة (مثال: أسبوعان)",
+      "status": "core" | "optional",
+      "skills": ["مهارة 1", "مهارة 2"],
+      "resources": [
+        { "title": "عنوان مصدر مقترح", "type": "article" | "video" | "course", "link": "رابط أو اسم مصدر تعليمي عام" }
+      ],
+      "next": ["المعرف الفريد للمرحلة التالية (مثال: step2)"]
+    }
+  ]
+}
+تأكد من أن الـ JSON منسق بشكل صحيح ويمكن عمل JSON.parse() له بسهولة. لا تضعه داخل وسم \`\`\`json، فقط أعد كائن الـ JSON مباشرة.`,
 };
 
 export const Route = createFileRoute("/api/tools/text")({
@@ -81,7 +106,10 @@ export const Route = createFileRoute("/api/tools/text")({
         const data = (await upstream.json()) as {
           choices?: Array<{ message?: { content?: string } }>;
         };
-        const text = data.choices?.[0]?.message?.content ?? "";
+        let text = data.choices?.[0]?.message?.content ?? "";
+        if (action === "roadmap") {
+          text = text.replace(/^```json\s*/i, "").replace(/```$/, "").trim();
+        }
         return Response.json({ text });
       },
     },
