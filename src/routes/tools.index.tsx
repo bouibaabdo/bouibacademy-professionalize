@@ -66,6 +66,7 @@ function ToolsIndex() {
   const visibleTools = TOOLS.filter((t) => {
     if (!enabledKeys) return true;
     const key = t.to.replace("/tools/", "");
+    if (key === "roadmap" && !enabledKeys.has("roadmap")) return true;
     return enabledKeys.has(key);
   });
   return (
