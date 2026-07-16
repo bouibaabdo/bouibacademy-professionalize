@@ -9,6 +9,7 @@ import { NavDropdown, type NavDropdownItem } from "@/components/nav-dropdown";
 import bouibaLogo from "@/assets/bouiba-logo.webp.asset.json";
 
 const TOOL_ITEMS: NavDropdownItem[] = [
+  { label: "مسارات التعلم (Roadmap)", to: "/tools/roadmap", description: "خريطة طريق تفاعلية للدراسة", badge: "جديد ✨" },
   { label: "نص إلى صورة", to: "/tools/image", description: "توليد صور بالذكاء الاصطناعي" },
   { label: "تلخيص المقالات", to: "/tools/summarize", description: "ملخصات ذكية سريعة" },
   { label: "الترجمة الذكية", to: "/tools/translate", description: "ترجمة دقيقة بين اللغات" },
@@ -111,6 +112,7 @@ export function SiteHeader() {
             to="/tools"
             items={TOOL_ITEMS}
             footer={{ label: "استعرض كل الأدوات", to: "/tools" }}
+            badge={true}
           />
 
           {SIMPLE_NAV.slice(1).map((item, i) => (

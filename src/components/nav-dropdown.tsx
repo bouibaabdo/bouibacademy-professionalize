@@ -7,6 +7,7 @@ export type NavDropdownItem = {
   to: string;
   search?: Record<string, string>;
   description?: string;
+  badge?: string;
 };
 
 type Props = {
@@ -15,9 +16,10 @@ type Props = {
   items: NavDropdownItem[];
   footer?: { label: string; to: string; search?: Record<string, string> };
   onLoad?: () => void;
+  badge?: boolean;
 };
 
-export function NavDropdown({ label, to, items, footer, onLoad }: Props) {
+export function NavDropdown({ label, to, items, footer, onLoad, badge }: Props) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -55,28 +57,34 @@ export function NavDropdown({ label, to, items, footer, onLoad }: Props) {
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
         aria-haspopup="menu"
-        className="inline-flex items-center gap-1 px-3 py-2 rounded-md text-sm font-medium text-muted-foreground transition-colors hover:text-foreground hover:bg-accent/60"
+        className="inline-flex items-center gap-1.5 px-3 py-2 rounded-md text-sm font-medium text-muted-foreground transition-colors hover:text-foreground hover:bg-accent/60"
       >
         {label}
+        {badge && (
+          <span className="relative flex h-2 w-2">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary/80 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+          </span>
+        )}
         <ChevronDown className={`h-3.5 w-3.5 transition-transform ${open ? "rotate-180" : ""}`} />
       </button>
 
       {open && (
         <div
           role="menu"
-          className="absolute top-full right-0 mt-1 min-w-[240px] rounded-xl border border-border bg-popover shadow-elegant p-2 z-50 animate-in fade-in-0 zoom-in-95"
+          className="absolute top-full right-0 mt-1 min-w-[260px] rounded-xl border border-border bg-popover shadow-elegant p-2 z-50 animate-in fade-in-0 zoom-in-95"
         >
           {to && (
             <Link
               to={to}
               onClick={() => setOpen(false)}
-              className="block rounded-md px-3 py-2 text-sm font-semibold text-foreground hover:bg-accent"
+              className="block rounded-md px-3 py-2 text-sm font-semibold text-foreground hover:bg-accent animate-fade-in"
             >
               {label} — نظرة عامة
             </Link>
           )}
           {to && items.length > 0 && <div className="my-1 h-px bg-border" />}
-          <ul className="max-h-[60vh] overflow-y-auto">
+          <ul className="max-h-[60vh] overflow-y-auto space-y-0.5">
             {items.length === 0 ? (
               <li className="px-3 py-2 text-xs text-muted-foreground">لا توجد عناصر بعد</li>
             ) : (
@@ -86,9 +94,16 @@ export function NavDropdown({ label, to, items, footer, onLoad }: Props) {
                     to={it.to}
                     search={it.search as never}
                     onClick={() => setOpen(false)}
-                    className="block rounded-md px-3 py-2 text-sm text-muted-foreground hover:bg-accent hover:text-foreground"
+                    className="block rounded-md px-3 py-2 text-sm text-muted-foreground hover:bg-accent hover:text-foreground transition-all"
                   >
-                    <span className="font-medium">{it.label}</span>
+                    <span className="font-medium flex items-center justify-between gap-2">
+                      <span>{it.label}</span>
+                      {it.badge && (
+                        <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-primary/10 text-primary uppercase tracking-wider scale-95 origin-right">
+                          {it.badge}
+                        </span>
+                      )}
+                    </span>
                     {it.description && (
                       <span className="block text-xs text-muted-foreground/80 mt-0.5">{it.description}</span>
                     )}
