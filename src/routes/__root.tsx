@@ -10,6 +10,7 @@ import {
 import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
+import criticalCss from "../critical.css?raw";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 
 function NotFoundComponent() {
@@ -50,10 +51,7 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
         </p>
         <div className="mt-6 flex flex-wrap justify-center gap-2">
           <button
-            onClick={() => {
-              router.invalidate();
-              reset();
-            }}
+            onClick={() => { router.invalidate(); reset(); }}
             className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:opacity-90"
           >
             حاول مجددًا
@@ -71,8 +69,7 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
 }
 
 const SITE_TITLE = "Bouiba Academy — أكاديميتك العربية للذكاء الاصطناعي";
-const SITE_DESC =
-  "دروس عملية، أحدث الأخبار، وأدوات مجانية في الذكاء الاصطناعي — Grok • Claude • Gemini • Llama.";
+const SITE_DESC = "دروس عملية، أحدث الأخبار، وأدوات مجانية في الذكاء الاصطناعي — Grok • Claude • Gemini • Llama.";
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
   head: () => ({
@@ -92,10 +89,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:description", content: SITE_DESC },
     ],
     links: [
-      { rel: "stylesheet", href: appCss },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      { rel: "preload", as: "style", href: appCss },
+      { rel: "stylesheet", href: appCss, media: "print", "data-css-swap": "true" } as unknown as { rel: string; href: string },
+      { rel: "icon", href: "/favicon.png", type: "image/png" },
     ],
     scripts: [
+      {
+        children: "document.querySelectorAll('link[data-css-swap]').forEach(function(l){l.media='all'});(function(){var loaded=false;function load(){if(loaded)return;loaded=true;var s=document.createElement('script');s.async=true;s.crossOrigin='anonymous';s.src='https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6404561979968062';document.head.appendChild(s);}var evts=['scroll','click','touchstart','keydown','mousemove'];evts.forEach(function(e){window.addEventListener(e,load,{once:true,passive:true})});setTimeout(load,4000);})();",
+      },
       {
         type: "application/ld+json",
         children: JSON.stringify({
@@ -105,11 +106,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           description: SITE_DESC,
           inLanguage: "ar",
         }),
-      },
-      {
-        async: true,
-        src: "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6404561979968062",
-        crossOrigin: "anonymous",
       },
     ],
   }),
@@ -123,7 +119,11 @@ function RootShell({ children }: { children: ReactNode }) {
   return (
     <html lang="ar" dir="rtl">
       <head>
+        <style dangerouslySetInnerHTML={{ __html: criticalCss }} />
         <HeadContent />
+        <noscript>
+          <link rel="stylesheet" href={appCss} />
+        </noscript>
       </head>
       <body>
         {children}

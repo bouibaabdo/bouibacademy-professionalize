@@ -45,10 +45,7 @@ function AdminWorldcup() {
   }, []);
 
   async function saveOverride() {
-    const urls = oUrls
-      .split(/\s+/)
-      .map((u) => u.trim())
-      .filter(Boolean);
+    const urls = oUrls.split(/\s+/).map((u) => u.trim()).filter(Boolean);
     if (!oMatchId || urls.length === 0) {
       toast.error("أدخل معرف المباراة ورابطاً واحداً على الأقل");
       return;
@@ -124,23 +121,12 @@ function AdminWorldcup() {
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid gap-3 md:grid-cols-2">
-            <Input
-              placeholder="معرّف المباراة (مثال: 2025-06-15-fr-mo)"
-              value={oMatchId}
-              onChange={(e) => setOMatchId(e.target.value)}
-            />
-            <Input
-              placeholder="وسم (اختياري)"
-              value={oLabel}
-              onChange={(e) => setOLabel(e.target.value)}
-            />
+            <Input placeholder="معرّف المباراة (مثال: 2025-06-15-fr-mo)"
+                   value={oMatchId} onChange={(e) => setOMatchId(e.target.value)} />
+            <Input placeholder="وسم (اختياري)" value={oLabel} onChange={(e) => setOLabel(e.target.value)} />
           </div>
-          <Textarea
-            placeholder="روابط البث — رابط واحد في كل سطر"
-            rows={4}
-            value={oUrls}
-            onChange={(e) => setOUrls(e.target.value)}
-          />
+          <Textarea placeholder="روابط البث — رابط واحد في كل سطر" rows={4}
+                    value={oUrls} onChange={(e) => setOUrls(e.target.value)} />
           <Button onClick={saveOverride} disabled={busy} className="gap-2">
             {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
             حفظ الرابط
@@ -153,18 +139,13 @@ function AdminWorldcup() {
               <p className="text-sm text-muted-foreground">لا توجد روابط مخصصة بعد.</p>
             ) : (
               overrides.map((o) => (
-                <div
-                  key={o.match_id}
-                  className="flex items-start justify-between rounded-lg border p-3"
-                >
+                <div key={o.match_id} className="flex items-start justify-between rounded-lg border p-3">
                   <div className="min-w-0">
                     <p className="font-semibold text-sm">{o.label || o.match_id}</p>
                     <p className="text-xs text-muted-foreground">{o.match_id}</p>
                     <ul className="mt-1 text-xs text-muted-foreground list-disc mr-4 space-y-0.5">
                       {o.stream_urls.map((u) => (
-                        <li key={u} className="truncate">
-                          {u}
-                        </li>
+                        <li key={u} className="truncate">{u}</li>
                       ))}
                     </ul>
                   </div>
@@ -185,22 +166,9 @@ function AdminWorldcup() {
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid gap-3 md:grid-cols-3">
-            <Input
-              placeholder="معرّف المباراة"
-              value={pMatchId}
-              onChange={(e) => setPMatchId(e.target.value)}
-            />
-            <Input
-              placeholder="وسم (اختياري)"
-              value={pLabel}
-              onChange={(e) => setPLabel(e.target.value)}
-            />
-            <Input
-              type="number"
-              placeholder="الأولوية"
-              value={pPriority}
-              onChange={(e) => setPPriority(e.target.value)}
-            />
+            <Input placeholder="معرّف المباراة" value={pMatchId} onChange={(e) => setPMatchId(e.target.value)} />
+            <Input placeholder="وسم (اختياري)" value={pLabel} onChange={(e) => setPLabel(e.target.value)} />
+            <Input type="number" placeholder="الأولوية" value={pPriority} onChange={(e) => setPPriority(e.target.value)} />
           </div>
           <Button onClick={savePin} disabled={busy} className="gap-2">
             {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
@@ -214,15 +182,10 @@ function AdminWorldcup() {
               <p className="text-sm text-muted-foreground">لا توجد مباريات مثبّتة.</p>
             ) : (
               pinned.map((p) => (
-                <div
-                  key={p.match_id}
-                  className="flex items-center justify-between rounded-lg border p-3"
-                >
+                <div key={p.match_id} className="flex items-center justify-between rounded-lg border p-3">
                   <div>
                     <p className="font-semibold text-sm">{p.label || p.match_id}</p>
-                    <p className="text-xs text-muted-foreground">
-                      {p.match_id} · أولوية {p.priority}
-                    </p>
+                    <p className="text-xs text-muted-foreground">{p.match_id} · أولوية {p.priority}</p>
                   </div>
                   <Button variant="ghost" size="icon" onClick={() => removePin(p.match_id)}>
                     <Trash2 className="h-4 w-4 text-destructive" />

@@ -151,8 +151,12 @@ export const getAdminStats = createServerFn({ method: "GET" })
     await assertAdmin(context);
     const [tools, overrides, pinned, favorites] = await Promise.all([
       context.supabase.from("admin_ai_tools").select("*", { count: "exact", head: true }),
-      context.supabase.from("admin_stream_overrides").select("*", { count: "exact", head: true }),
-      context.supabase.from("admin_pinned_matches").select("*", { count: "exact", head: true }),
+      context.supabase
+        .from("admin_stream_overrides")
+        .select("*", { count: "exact", head: true }),
+      context.supabase
+        .from("admin_pinned_matches")
+        .select("*", { count: "exact", head: true }),
       context.supabase.from("match_favorites").select("*", { count: "exact", head: true }),
     ]);
     return {

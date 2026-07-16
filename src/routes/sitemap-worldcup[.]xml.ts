@@ -1,6 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
 import type {} from "@tanstack/react-start";
-import { buildUrlset, SITEMAP_BASE_URL, xmlResponse, type SitemapEntry } from "@/lib/sitemap-utils";
+import {
+  buildUrlset,
+  SITEMAP_BASE_URL,
+  xmlResponse,
+  type SitemapEntry,
+} from "@/lib/sitemap-utils";
 
 export const Route = createFileRoute("/sitemap-worldcup.xml")({
   server: {

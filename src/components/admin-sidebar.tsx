@@ -1,5 +1,14 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { LayoutDashboard, FileText, Trophy, Sparkles, BarChart3, LogOut, Home } from "lucide-react";
+import {
+  LayoutDashboard,
+  FileText,
+  Trophy,
+  Sparkles,
+  BarChart3,
+  LogOut,
+  Home,
+  Video,
+} from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -17,6 +26,7 @@ import { supabase } from "@/integrations/supabase/client";
 const items = [
   { title: "نظرة عامة", url: "/admin", icon: LayoutDashboard, exact: true },
   { title: "المقالات", url: "/admin/posts", icon: FileText },
+  { title: "دروس الفيديو", url: "/admin/lessons", icon: Video },
   { title: "كأس العالم", url: "/admin/worldcup", icon: Trophy },
   { title: "أدوات AI", url: "/admin/tools", icon: Sparkles },
   { title: "التحليلات", url: "/admin/analytics", icon: BarChart3 },

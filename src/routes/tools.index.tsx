@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ImageIcon, FileText, Lightbulb, Languages, Search, Sparkles } from "lucide-react";
+import { ImageIcon, FileText, Lightbulb, Languages, Search, Sparkles, Trophy } from "lucide-react";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -76,6 +76,31 @@ function ToolsIndex() {
             مجموعة أدوات AI مجانية تعمل مباشرة داخل الموقع — بدون تسجيل ولا اشتراكات.
           </p>
         </div>
+      </section>
+
+      <section className="container-page pt-10 md:pt-14">
+        <Link
+          to="/quiz"
+          className="group relative flex flex-col md:flex-row items-center gap-6 overflow-hidden rounded-3xl border border-primary/30 bg-gradient-to-l from-primary/15 via-purple-500/10 to-pink-500/15 p-6 md:p-8 shadow-elegant transition-all hover:-translate-y-1"
+        >
+          <div className="inline-flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-background shadow-soft ring-1 ring-border">
+            <Trophy className="h-8 w-8 text-primary" />
+          </div>
+          <div className="flex-1 text-center md:text-right">
+            <div className="inline-flex items-center gap-1.5 rounded-full bg-primary/15 px-3 py-0.5 text-xs font-bold text-primary mb-2">
+              جديد ✨
+            </div>
+            <h2 className="font-display text-2xl md:text-3xl font-extrabold">
+              اختبار: ما أداة الذكاء الاصطناعي المناسبة لك؟
+            </h2>
+            <p className="mt-1 text-muted-foreground">
+              6 أسئلة سريعة وتوصية شخصية بأفضل أداة AI تناسب احتياجاتك من بين 8 أدوات رائدة.
+            </p>
+          </div>
+          <span className="inline-flex items-center rounded-lg bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground shadow-soft group-hover:opacity-90">
+            ابدأ الاختبار ←
+          </span>
+        </Link>
       </section>
 
       <section className="container-page py-14 md:py-20">

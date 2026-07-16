@@ -13,7 +13,7 @@ function AdminPosts() {
   const [posts, setPosts] = useState<any[] | null>(null);
   useEffect(() => {
     getPosts()
-      .then((p: any) => setPosts(Array.isArray(p) ? p : (p?.posts ?? [])))
+      .then((p: any) => setPosts(Array.isArray(p) ? p : p?.posts ?? []))
       .catch(() => setPosts([]));
   }, []);
 
@@ -27,12 +27,7 @@ function AdminPosts() {
           </p>
         </div>
         <Button asChild>
-          <a
-            href="https://www.blogger.com/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="gap-2"
-          >
+          <a href="https://www.blogger.com/" target="_blank" rel="noopener noreferrer" className="gap-2">
             <ExternalLink className="h-4 w-4" />
             فتح لوحة Blogger
           </a>
@@ -55,9 +50,7 @@ function AdminPosts() {
                   <div className="min-w-0">
                     <p className="font-semibold truncate">{p.title}</p>
                     <p className="text-xs text-muted-foreground mt-0.5">
-                      {p.published
-                        ? new Date(p.published).toLocaleDateString("ar-EG-u-nu-latn")
-                        : ""}
+                      {p.published ? new Date(p.published).toLocaleDateString("ar-EG-u-nu-latn") : ""}
                     </p>
                   </div>
                   <div className="flex items-center gap-2 shrink-0">

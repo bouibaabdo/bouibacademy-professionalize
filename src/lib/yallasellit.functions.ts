@@ -3,6 +3,7 @@ import { parse } from "node-html-parser";
 
 const BASE = "https://yallasellit.com";
 
+
 export interface YSMatch {
   id: string;
   home: string;
@@ -43,13 +44,13 @@ function extractPlayerUrl(html: string, baseUrl: string): string | undefined {
     .map((iframe) => cleanUrl(iframe.getAttribute("src"), baseUrl))
     .filter(Boolean) as string[];
 
-  const preferred = iframes.find((url) => /player|embed|stream|live|twitch\.tv|m3u8/i.test(url));
+  const preferred = iframes.find((url) =>
+    /player|embed|stream|live|twitch\.tv|m3u8/i.test(url),
+  );
   if (preferred) return preferred;
   if (iframes[0]) return iframes[0];
 
-  const sourceMatch = html.match(
-    /(?:file|source|src)\s*[:=]\s*["']([^"']+(?:m3u8|embed|player|stream)[^"']*)["']/i,
-  );
+  const sourceMatch = html.match(/(?:file|source|src)\s*[:=]\s*["']([^"']+(?:m3u8|embed|player|stream)[^"']*)["']/i);
   return cleanUrl(sourceMatch?.[1], baseUrl);
 }
 
@@ -107,7 +108,8 @@ function channelPlayerUrls(channel: string): string[] {
 async function resolvePlayerUrl(pageUrl: string): Promise<string | undefined> {
   const res = await fetch(pageUrl, {
     headers: {
-      "User-Agent": "Mozilla/5.0 (compatible; BouibAcademyBot/1.0; +https://edu.bouibacademy.me)",
+      "User-Agent":
+        "Mozilla/5.0 (compatible; BouibAcademyBot/1.0; +https://www.bouibacademy.me)",
       Accept: "text/html,application/xhtml+xml",
       "Accept-Language": "ar,en;q=0.8",
     },
@@ -132,7 +134,8 @@ function parseCard(html: string, day: YSMatch["day"]): YSMatch | null {
   const channel = root.querySelector(".MT_Info li:first-child span")?.text.trim() || undefined;
   const finished = status.includes("انتهت");
   const live =
-    !finished && (status.includes("جارية") || status.includes("مباشر") || /^\d+\s*'/.test(status));
+    !finished &&
+    (status.includes("جارية") || status.includes("مباشر") || /^\d+\s*'/.test(status));
   const href = root.querySelector("a[href]")?.getAttribute("href") || "";
 
   // Keep the match page as a fallback, then enrich it with the real iframe URL
@@ -142,26 +145,15 @@ function parseCard(html: string, day: YSMatch["day"]): YSMatch | null {
   const streamUrl = channelUrls[0] || pageUrl;
 
   const id = `${home}-${away}-${day}`.replace(/\s+/g, "-");
-  return {
-    id,
-    home,
-    away,
-    time,
-    status,
-    live,
-    finished,
-    streamUrl,
-    pageUrl,
-    channelUrls,
-    channel,
-    day,
-  };
+  return { id, home, away, time, status, live, finished, streamUrl, pageUrl, channelUrls, channel, day };
 }
+
 
 async function scrape(day: YSMatch["day"]): Promise<YSMatch[]> {
   const res = await fetch(PAGES[day], {
     headers: {
-      "User-Agent": "Mozilla/5.0 (compatible; BouibAcademyBot/1.0; +https://edu.bouibacademy.me)",
+      "User-Agent":
+        "Mozilla/5.0 (compatible; BouibAcademyBot/1.0; +https://www.bouibacademy.me)",
       Accept: "text/html",
     },
     signal: AbortSignal.timeout(15000),

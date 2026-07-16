@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { ImageIcon, Loader2, Download, ArrowRight } from "lucide-react";
 
+
 export const Route = createFileRoute("/tools/image")({
   head: () => ({
     meta: [
@@ -11,13 +12,10 @@ export const Route = createFileRoute("/tools/image")({
         content: "أنشئ صورًا احترافية بالذكاء الاصطناعي من وصف نصي — أداة مجانية بالعربية.",
       },
       { property: "og:title", content: "تحويل النص إلى صورة — Bouiba Academy" },
-      {
-        property: "og:description",
-        content: "أنشئ صورًا احترافية بالذكاء الاصطناعي من وصف نصي بالعربية أو الإنجليزية.",
-      },
-      { property: "og:url", content: "https://edu.bouibacademy.me/tools/image" },
+      { property: "og:description", content: "أنشئ صورًا احترافية بالذكاء الاصطناعي من وصف نصي بالعربية أو الإنجليزية." },
+      { property: "og:url", content: "https://www.bouibacademy.me/tools/image" },
     ],
-    links: [{ rel: "canonical", href: "https://edu.bouibacademy.me/tools/image" }],
+    links: [{ rel: "canonical", href: "https://www.bouibacademy.me/tools/image" }],
   }),
   component: ImageTool,
 });
@@ -79,9 +77,7 @@ function ImageTool() {
       </p>
 
       <form onSubmit={generate} className="space-y-4">
-        <label htmlFor="image-prompt" className="sr-only">
-          وصف الصورة
-        </label>
+        <label htmlFor="image-prompt" className="sr-only">وصف الصورة</label>
         <textarea
           id="image-prompt"
           value={prompt}

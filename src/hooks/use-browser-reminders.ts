@@ -12,18 +12,10 @@ interface Fav {
 const STORAGE_KEY = "wc_browser_reminders_sent";
 
 function loadSent(): Record<string, number> {
-  try {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY) ?? "{}");
-  } catch {
-    return {};
-  }
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY) ?? "{}"); } catch { return {}; }
 }
 function saveSent(v: Record<string, number>) {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(v));
-  } catch {
-    /* ignore */
-  }
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(v)); } catch { /* ignore */ }
 }
 
 export function useBrowserReminders() {
@@ -74,8 +66,6 @@ export function useBrowserReminders() {
 
     check();
     timerRef.current = setInterval(check, 60_000);
-    return () => {
-      if (timerRef.current) clearInterval(timerRef.current);
-    };
+    return () => { if (timerRef.current) clearInterval(timerRef.current); };
   }, []);
 }

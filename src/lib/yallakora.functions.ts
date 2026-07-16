@@ -32,9 +32,7 @@ function fmtDate(d: Date): string {
 function urlFor(day: YKMatch["day"]): string {
   const now = new Date();
   const offset = day === "yesterday" ? -1 : day === "tomorrow" ? 1 : 0;
-  const target = new Date(
-    Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + offset),
-  );
+  const target = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + offset));
   return `${BASE}/match-center?date=${encodeURIComponent(fmtDate(target))}`;
 }
 
@@ -57,17 +55,11 @@ function classifyStatus(itemClass: string, status: string): { live: boolean; fin
   const live =
     !finished &&
     (cls.includes("live") ||
-      /مباشر|جاري|جارية|الشوط\s*الأول|الشوط\s*الثاني|استراحة|الوقت\s*بدل\s*الضائع|الوقت\s*الإضافي/.test(
-        s,
-      ));
+      /مباشر|جاري|جارية|الشوط\s*الأول|الشوط\s*الثاني|استراحة|الوقت\s*بدل\s*الضائع|الوقت\s*الإضافي/.test(s));
   return { live, finished };
 }
 
-function parseMatchItem(
-  item: HTMLElement,
-  league: string | undefined,
-  day: YKMatch["day"],
-): YKMatch | null {
+function parseMatchItem(item: HTMLElement, league: string | undefined, day: YKMatch["day"]): YKMatch | null {
   const link = item.querySelector("a[href]");
   const href = link?.getAttribute("href") || "";
   const idAttr = item.getAttribute("liveScoreMatchId") || item.getAttribute("livescorematchid");
@@ -76,10 +68,8 @@ function parseMatchItem(
 
   const teamA = item.querySelector(".teams.teamA, .teamA");
   const teamB = item.querySelector(".teams.teamB, .teamB");
-  const home =
-    textOf(teamA?.querySelector("p")) || teamA?.querySelector("img")?.getAttribute("alt") || "";
-  const away =
-    textOf(teamB?.querySelector("p")) || teamB?.querySelector("img")?.getAttribute("alt") || "";
+  const home = textOf(teamA?.querySelector("p")) || teamA?.querySelector("img")?.getAttribute("alt") || "";
+  const away = textOf(teamB?.querySelector("p")) || teamB?.querySelector("img")?.getAttribute("alt") || "";
   if (!home || !away) return null;
 
   const scoreEls = item.querySelectorAll(".MResult .score, .teamResult .score");
@@ -110,9 +100,7 @@ function parseMatchItem(
     live,
     finished,
     channel,
-    league: roundLabel
-      ? `${league ?? ""}${league && roundLabel ? " · " : ""}${roundLabel}`
-      : league,
+    league: roundLabel ? `${league ?? ""}${league && roundLabel ? " · " : ""}${roundLabel}` : league,
     matchUrl,
     day,
   };
@@ -121,7 +109,8 @@ function parseMatchItem(
 async function scrape(day: YKMatch["day"]): Promise<YKMatch[]> {
   const res = await fetch(urlFor(day), {
     headers: {
-      "User-Agent": "Mozilla/5.0 (compatible; BouibAcademyBot/1.0; +https://edu.bouibacademy.me)",
+      "User-Agent":
+        "Mozilla/5.0 (compatible; BouibAcademyBot/1.0; +https://www.bouibacademy.me)",
       Accept: "text/html,application/xhtml+xml",
       "Accept-Language": "ar,en;q=0.8",
     },

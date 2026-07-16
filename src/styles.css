@@ -1,18 +1,15 @@
 @import "tailwindcss" source(none);
-@import "@fontsource/cairo/400.css";
-@import "@fontsource/cairo/600.css";
-@import "@fontsource/cairo/700.css";
-@import "@fontsource/cairo/800.css";
-@import "@fontsource/tajawal/400.css";
-@import "@fontsource/tajawal/500.css";
 @source "../src";
 @import "tw-animate-css";
+@import "@fontsource/tajawal/arabic-400.css";
+@import "@fontsource/tajawal/arabic-500.css";
+@import "@fontsource/cairo/arabic-700.css";
 
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --font-sans: "Tajawal", "Cairo", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Cairo", "Tajawal", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Tajawal", "Tajawal-fallback", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Cairo", "Cairo-fallback", ui-sans-serif, system-ui, sans-serif;
 
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -64,7 +61,7 @@
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.18 0.03 260);
 
-  --primary: oklch(0.58 0.19 258); /* #3b82f6 electric blue */
+  --primary: oklch(0.58 0.19 258);           /* #3b82f6 electric blue */
   --primary-foreground: oklch(0.99 0.003 250);
   --primary-glow: oklch(0.72 0.16 240);
 
@@ -84,30 +81,16 @@
   --input: oklch(0.92 0.008 250);
   --ring: oklch(0.58 0.19 258);
 
-  --gradient-hero:
-    radial-gradient(
+  --gradient-hero: radial-gradient(
       ellipse 80% 60% at 50% 0%,
       color-mix(in oklab, var(--primary) 14%, transparent),
       transparent 70%
     ),
     linear-gradient(180deg, var(--background), var(--surface));
   --gradient-primary: linear-gradient(135deg, var(--primary), var(--primary-glow));
-  --gradient-mesh:
-    radial-gradient(
-      at 20% 10%,
-      color-mix(in oklab, var(--primary) 18%, transparent) 0px,
-      transparent 50%
-    ),
-    radial-gradient(
-      at 80% 20%,
-      color-mix(in oklab, var(--primary-glow) 20%, transparent) 0px,
-      transparent 50%
-    ),
-    radial-gradient(
-      at 40% 90%,
-      color-mix(in oklab, var(--primary) 10%, transparent) 0px,
-      transparent 50%
-    );
+  --gradient-mesh: radial-gradient(at 20% 10%, color-mix(in oklab, var(--primary) 18%, transparent) 0px, transparent 50%),
+    radial-gradient(at 80% 20%, color-mix(in oklab, var(--primary-glow) 20%, transparent) 0px, transparent 50%),
+    radial-gradient(at 40% 90%, color-mix(in oklab, var(--primary) 10%, transparent) 0px, transparent 50%);
 }
 
 .dark {
@@ -146,12 +129,7 @@
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
   }
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
+  h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);
     letter-spacing: -0.01em;
   }
@@ -186,41 +164,18 @@
   line-height: 1.9;
   color: var(--color-foreground);
 }
-.prose-ar h1,
-.prose-ar h2,
-.prose-ar h3 {
+.prose-ar h1, .prose-ar h2, .prose-ar h3 {
   margin-top: 1.75em;
   margin-bottom: 0.6em;
   font-weight: 700;
 }
-.prose-ar h2 {
-  font-size: 1.65rem;
-}
-.prose-ar h3 {
-  font-size: 1.3rem;
-}
-.prose-ar p {
-  margin-bottom: 1.1em;
-}
-.prose-ar a {
-  color: var(--color-primary);
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
-.prose-ar ul,
-.prose-ar ol {
-  padding-inline-start: 1.5rem;
-  margin-bottom: 1.1em;
-}
-.prose-ar li {
-  margin-bottom: 0.4em;
-}
-.prose-ar img {
-  border-radius: var(--radius-lg);
-  margin: 1.5em 0;
-  max-width: 100%;
-  height: auto;
-}
+.prose-ar h2 { font-size: 1.65rem; }
+.prose-ar h3 { font-size: 1.3rem; }
+.prose-ar p { margin-bottom: 1.1em; }
+.prose-ar a { color: var(--color-primary); text-decoration: underline; text-underline-offset: 3px; }
+.prose-ar ul, .prose-ar ol { padding-inline-start: 1.5rem; margin-bottom: 1.1em; }
+.prose-ar li { margin-bottom: 0.4em; }
+.prose-ar img { border-radius: var(--radius-lg); margin: 1.5em 0; max-width: 100%; height: auto; }
 .prose-ar blockquote {
   border-inline-start: 4px solid var(--color-primary);
   padding-inline-start: 1rem;

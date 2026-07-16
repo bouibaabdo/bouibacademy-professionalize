@@ -9,9 +9,9 @@ export const Route = createFileRoute("/tools/summarize")({
       { name: "description", content: "أداة عربية لتلخيص المقالات الطويلة في نقاط واضحة." },
       { property: "og:title", content: "تلخيص المقالات — Bouiba Academy" },
       { property: "og:description", content: "لخّص أي مقال طويل إلى نقاط عربية موجزة خلال ثوانٍ." },
-      { property: "og:url", content: "https://edu.bouibacademy.me/tools/summarize" },
+      { property: "og:url", content: "https://www.bouibacademy.me/tools/summarize" },
     ],
-    links: [{ rel: "canonical", href: "https://edu.bouibacademy.me/tools/summarize" }],
+    links: [{ rel: "canonical", href: "https://www.bouibacademy.me/tools/summarize" }],
   }),
   component: () => (
     <TextToolShell

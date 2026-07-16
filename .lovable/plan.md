@@ -1,54 +1,38 @@
-## المشكلة
 
-مصادر البث الحالية (يلا سلّيت + SportSRC + `topx.poiy.online`) إمّا محجوبة بـ CSP `frame-ancestors` أو تُعيد شاشة سوداء / إعلانات، فلا يعمل أي رابط داخل نافذة المشغّل.
+# خطة تحسينات الأداء الإضافية
 
-## الخطة
+هدف: نقص LCP، JS payload، و CLS الباقي من AdSense، بدون ما نمسو الوظائف الحالية.
 
-### 1. جلب مصادر بث حيّة وقابلة للتضمين
+## 1. تأجيل AdSense حتى بعد التفاعل (يقلل JS blocking و CLS)
+- فـ `src/routes/__root.tsx`: نحيدو AdSense من `scripts` (async مباشرة).
+- نديرو inline script صغير كيحمّل `adsbygoogle.js` بعد أول `scroll` / `click` / `touchstart` أو بعد 3s (idle) — أيها يجي أولاً.
+- الفائدة: 166 KiB ديال JS ما كيتحمّلوش فـ initial render → LCP/TBT ينخفضو، و layout shifts ديال Auto Ads كتأخّر بلاش ما تأثر على أول رسم.
 
-إضافة موصلين جديدين server-side (عبر `createServerFn` + Firecrawl عند الحاجة لتجاوز anti-bot) لمواقع معروفة بروابط `iframe` مفتوحة:
+## 2. Preload ديال LCP image فـ الصفحة الرئيسية
+- فـ `src/routes/index.tsx` (أو مكوّن hero): نزيدو `head().links` بـ `rel="preload" as="image" fetchPriority="high"` لأول thumbnail (featured post) عبر `optimizeBloggerImage`.
+- نتأكدو `<img>` ديالها كتستعمل `fetchPriority="high"` و `loading="eager"` (موجود partially فـ `PostCard` عبر `priority`).
 
-- `koracast.com` / `koooora.live` — بث كأس العالم بقنوات beIN مضمّنة مباشرة.
-- `elahmad.com/tv` — مشغّل HLS مباشر لقنوات beIN Sports MAX 1..10 و beIN Xtra، يسمح بالتضمين.
-- `livehdtv.net` — بديل HLS.
-- `shoot-yalla-tv.net` — مطابقة بالمباراة.
+## 3. Self-host Google Fonts (Cairo/Tajawal) عبر `@fontsource`
+- نبدلو `<link>` لـ Google Fonts بـ `@fontsource/tajawal` + `@fontsource/cairo` (weights: Tajawal 400/500، Cairo 700 فقط).
+- كنربحو: preconnect خارجي + round-trip لـ fonts.googleapis.com، والخطوط كتجي من نفس الـ CDN ديال Lovable مع cache headers أفضل.
+- نديرو `font-display: optional` فـ CSS ديالهم (نفس السلوك الحالي، بلا CLS).
 
-كل موصل يُرجع `{ label, embedUrl, priority }` ويُختبر إمكانية التضمين (رأس `X-Frame-Options` / `content-security-policy`) قبل الإدراج.
+## 4. تقليل CSS payload
+- مراجعة `src/styles.css` و مسح utilities غير مستعملة (tw-animate-css إلا مكاينش استعمال فعلي).
+- نتحققو من `@import "tw-animate-css"` واش كيتخدم؛ إلا لا، نحيدوه.
 
-### 2. طبقة تحقّق من صلاحية الرابط
+## 5. تحسين `today-matches-rail` — تأجيل fetch
+- المكوّن كيدير fetch فوراً على الرئيسية. نأجّلوه بـ `enabled` بعد `requestIdleCallback` أو بعد `IntersectionObserver` (يفعّل الـ query كي يقرب المستخدم من الـ section).
+- كيخفف من عدد الطلبات فأول رسم و كيحسن TTI.
 
-`src/lib/streamProbe.functions.ts`: `HEAD`/`GET` للرابط من السيرفر، ورفض أي مصدر يعيد:
+## التفاصيل التقنية (ملفات مُعدَّلة)
+- `src/routes/__root.tsx`: تأجيل AdSense + إزالة روابط Google Fonts.
+- `src/critical.css` + `src/styles.css`: `@import` لـ fontsource + تنظيف.
+- `src/routes/index.tsx`: preload LCP thumbnail من loader data.
+- `src/components/today-matches-rail.tsx`: `enabled` gate بـ `useHydrated` + `IntersectionObserver`.
+- `package.json`: `bun add @fontsource/tajawal @fontsource/cairo` و مراجعة `tw-animate-css`.
 
-- `X-Frame-Options: DENY|SAMEORIGIN`
-- `content-security-policy` يمنع `frame-ancestors *`
-- `4xx/5xx`
-
-هذا يمنع ظهور شاشة سوداء ويترك فقط الروابط القابلة للتشغيل.
-
-### 3. تجميع المصادر وترتيبها
-
-تحديث `src/routes/worldcup.tsx` و`src/components/stream-modal.tsx`:
-
-- دمج مصادر: قنوات مباشرة (elahmad HLS) → koracast → yallasellit → SportSRC.
-- تشغيل التحقّق (الخطوة 2) بالتوازي عبر `Promise.allSettled`، وإسقاط المصادر الفاشلة قبل عرض الأزرار.
-- تقليص مهلة الفشل التلقائي من 9 ثوانٍ إلى 5، مع مؤشّر "جارٍ التحقّق من المصادر…".
-
-### 4. مشغّل HLS داخلي (للمصادر المباشرة m3u8)
-
-إضافة `<video>` + `hls.js` (`bun add hls.js`) في `stream-modal.tsx` لتشغيل روابط `.m3u8` مباشرة من elahmad دون iframe — يتخطّى قيود CSP كليًا لهذه المصادر.
-
-### 5. تجاوز الإدارة
-
-في `/admin`: تبويب "روابط البث" الحالي يبقى — عند فشل كل المصادر التلقائية، الإدمن يلصق رابط `.m3u8` أو iframe يدويًا وله الأولوية القصوى.
-
-## الملفات المتأثرة
-
-- جديد: `src/lib/koracast.functions.ts`, `src/lib/elahmad.functions.ts`, `src/lib/streamProbe.functions.ts`
-- تعديل: `src/routes/worldcup.tsx`, `src/components/stream-modal.tsx`, `src/lib/yallasellit.functions.ts`
-- تبعية: `hls.js`, (اختياري) موصل Firecrawl إذا لم يكن مربوطًا
-
-## معايير النجاح
-
-- الضغط على "شاهد البث" يفتح فيديو يعمل خلال ≤5 ثوانٍ لأي مباراة مباشرة.
-- في حال فشل مصدر، التبديل تلقائي بلا تدخّل.
-- لا شاشة سوداء دائمة: إن فشل الجميع، رسالة واضحة + زر "افتح في نافذة خارجية".
+## خارج النطاق (ماشي هاد الجلسة)
+- نقل صور Blogger لـ Supabase Storage.
+- إزالة AdSense كلياً.
+- Server-side rendering ديال images.

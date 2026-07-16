@@ -37,18 +37,12 @@ export const Route = createFileRoute("/posts/")({
   head: () => ({
     meta: [
       { title: "المقالات — Bouiba Academy" },
-      {
-        name: "description",
-        content: "تصفح جميع مقالات ودروس أكاديمية بويبة في الذكاء الاصطناعي.",
-      },
+      { name: "description", content: "تصفح جميع مقالات ودروس أكاديمية بويبة في الذكاء الاصطناعي." },
       { property: "og:title", content: "المقالات — Bouiba Academy" },
-      {
-        property: "og:description",
-        content: "مكتبة كاملة من الدروس والمقالات العربية حول أدوات وتطبيقات الذكاء الاصطناعي.",
-      },
-      { property: "og:url", content: "https://edu.bouibacademy.me/posts" },
+      { property: "og:description", content: "مكتبة كاملة من الدروس والمقالات العربية حول أدوات وتطبيقات الذكاء الاصطناعي." },
+      { property: "og:url", content: "https://www.bouibacademy.me/posts" },
     ],
-    links: [{ rel: "canonical", href: "https://edu.bouibacademy.me/posts" }],
+    links: [{ rel: "canonical", href: "https://www.bouibacademy.me/posts" }],
   }),
   component: PostsPage,
   errorComponent: ({ error }) => (
@@ -66,65 +60,59 @@ function PostsPage() {
     <div className="min-h-screen bg-background">
       <SiteHeader />
       <main>
-        <section className="hero-bg border-b border-border">
-          <div className="container-page py-14 md:py-20 text-center">
-            <p className="text-sm font-semibold text-primary mb-3">المكتبة</p>
-            <h1 className="font-display text-4xl md:text-5xl font-extrabold">
-              {label ? (
-                <>
-                  مقالات: <span className="gradient-text">{label}</span>
-                </>
-              ) : (
-                "جميع المقالات"
-              )}
-            </h1>
-            <p className="mt-4 text-muted-foreground">{data.total} مقال منشور</p>
-          </div>
-        </section>
 
-        <div className="container-page py-10">
-          {/* filters */}
-          <div className="mb-8 flex flex-wrap gap-2 justify-center">
+      <section className="hero-bg border-b border-border">
+        <div className="container-page py-14 md:py-20 text-center">
+          <p className="text-sm font-semibold text-primary mb-3">المكتبة</p>
+          <h1 className="font-display text-4xl md:text-5xl font-extrabold">
+            {label ? <>مقالات: <span className="gradient-text">{label}</span></> : "جميع المقالات"}
+          </h1>
+          <p className="mt-4 text-muted-foreground">{data.total} مقال منشور</p>
+        </div>
+      </section>
+
+      <div className="container-page py-10">
+        {/* filters */}
+        <div className="mb-8 flex flex-wrap gap-2 justify-center">
+          <Link
+            to="/posts"
+            search={{}}
+            className={`rounded-full border px-4 py-1.5 text-sm font-medium transition-colors ${
+              !label
+                ? "bg-primary text-primary-foreground border-primary"
+                : "bg-surface border-border hover:border-primary hover:text-primary"
+            }`}
+          >
+            الكل
+          </Link>
+          {labels.slice(0, 12).map((l) => (
             <Link
+              key={l.label}
               to="/posts"
-              search={{}}
+              search={{ label: l.label }}
               className={`rounded-full border px-4 py-1.5 text-sm font-medium transition-colors ${
-                !label
+                label === l.label
                   ? "bg-primary text-primary-foreground border-primary"
                   : "bg-surface border-border hover:border-primary hover:text-primary"
               }`}
             >
-              الكل
+              {l.label}
             </Link>
-            {labels.slice(0, 12).map((l) => (
-              <Link
-                key={l.label}
-                to="/posts"
-                search={{ label: l.label }}
-                className={`rounded-full border px-4 py-1.5 text-sm font-medium transition-colors ${
-                  label === l.label
-                    ? "bg-primary text-primary-foreground border-primary"
-                    : "bg-surface border-border hover:border-primary hover:text-primary"
-                }`}
-              >
-                {l.label}
-              </Link>
+          ))}
+        </div>
+
+        <h2 className="sr-only">قائمة المقالات</h2>
+        {data.posts.length === 0 ? (
+          <div className="text-center py-20 text-muted-foreground">لا توجد مقالات في هذا التصنيف بعد.</div>
+        ) : (
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {data.posts.map((p) => (
+              <PostCard key={p.id} post={p} />
             ))}
           </div>
+        )}
+      </div>
 
-          <h2 className="sr-only">قائمة المقالات</h2>
-          {data.posts.length === 0 ? (
-            <div className="text-center py-20 text-muted-foreground">
-              لا توجد مقالات في هذا التصنيف بعد.
-            </div>
-          ) : (
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {data.posts.map((p) => (
-                <PostCard key={p.id} post={p} />
-              ))}
-            </div>
-          )}
-        </div>
       </main>
       <SiteFooter />
     </div>

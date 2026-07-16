@@ -18,13 +18,10 @@ export const Route = createFileRoute("/api/tools/image")({
           });
         }
         if (prompt.length > 1000) {
-          return new Response(
-            JSON.stringify({ error: "الوصف طويل جدًا (الحد الأقصى 1000 حرف)." }),
-            {
-              status: 413,
-              headers: { "Content-Type": "application/json" },
-            },
-          );
+          return new Response(JSON.stringify({ error: "الوصف طويل جدًا (الحد الأقصى 1000 حرف)." }), {
+            status: 413,
+            headers: { "Content-Type": "application/json" },
+          });
         }
         // Enforce admin enable/disable toggle server-side
         try {
@@ -45,10 +42,10 @@ export const Route = createFileRoute("/api/tools/image")({
         }
         const key = process.env.GEMINI_API_KEY;
         if (!key) {
-          return new Response(JSON.stringify({ error: "لم يتم إعداد مفتاح Gemini API" }), {
-            status: 500,
-            headers: { "Content-Type": "application/json" },
-          });
+          return new Response(
+            JSON.stringify({ error: "لم يتم إعداد مفتاح Gemini API" }),
+            { status: 500, headers: { "Content-Type": "application/json" } },
+          );
         }
 
         const model = "gemini-2.5-flash-image";
@@ -90,9 +87,10 @@ export const Route = createFileRoute("/api/tools/image")({
               inline.mimeType ??
               (p.inline_data as { mime_type?: string })?.mime_type ??
               "image/png";
-            return new Response(JSON.stringify({ dataUrl: `data:${mime};base64,${inline.data}` }), {
-              headers: { "Content-Type": "application/json" },
-            });
+            return new Response(
+              JSON.stringify({ dataUrl: `data:${mime};base64,${inline.data}` }),
+              { headers: { "Content-Type": "application/json" } },
+            );
           }
         }
 

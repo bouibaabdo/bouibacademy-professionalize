@@ -4,6 +4,7 @@ import { Calendar, Clock, ArrowRight, ExternalLink, Tag } from "lucide-react";
 import { getPost } from "@/lib/blogger.functions";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
+import { TodayMatchesRail } from "@/components/today-matches-rail";
 
 function makeQuery(id: string) {
   return queryOptions({
@@ -15,11 +16,7 @@ function makeQuery(id: string) {
 
 function formatDate(iso: string) {
   try {
-    return new Intl.DateTimeFormat("ar-EG-u-nu-latn", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    }).format(new Date(iso));
+    return new Intl.DateTimeFormat("ar-EG-u-nu-latn", { year: "numeric", month: "long", day: "numeric" }).format(new Date(iso));
   } catch {
     return iso;
   }
@@ -36,11 +33,10 @@ export const Route = createFileRoute("/posts/$id")({
     const SUFFIX = " — Bouiba Academy";
     const maxTitle = 60 - SUFFIX.length;
     const rawTitle = post?.title ?? "مقال";
-    const shortTitle =
-      rawTitle.length > maxTitle ? rawTitle.slice(0, maxTitle - 1).trimEnd() + "…" : rawTitle;
+    const shortTitle = rawTitle.length > maxTitle ? rawTitle.slice(0, maxTitle - 1).trimEnd() + "…" : rawTitle;
     const title = `${shortTitle}${SUFFIX}`;
     const desc = post ? post.excerpt.slice(0, 160) : "مقال من أكاديمية بويبة للذكاء الاصطناعي.";
-    const canonical = `https://edu.bouibacademy.me/posts/${params.id}`;
+    const canonical = `https://www.bouibacademy.me/posts/${params.id}`;
     const meta: Array<Record<string, string>> = [
       { title },
       { name: "description", content: desc },
@@ -80,9 +76,7 @@ export const Route = createFileRoute("/posts/$id")({
   errorComponent: ({ error }) => (
     <div className="min-h-screen">
       <SiteHeader />
-      <div className="container-page py-20 text-center text-muted-foreground">
-        تعذر التحميل: {error.message}
-      </div>
+      <div className="container-page py-20 text-center text-muted-foreground">تعذر التحميل: {error.message}</div>
     </div>
   ),
   notFoundComponent: () => (
@@ -90,9 +84,7 @@ export const Route = createFileRoute("/posts/$id")({
       <SiteHeader />
       <div className="container-page py-20 text-center">
         <h1 className="text-3xl font-bold">المقال غير موجود</h1>
-        <Link to="/posts" className="mt-6 inline-block text-primary font-semibold">
-          ← العودة للمقالات
-        </Link>
+        <Link to="/posts" className="mt-6 inline-block text-primary font-semibold">← العودة للمقالات</Link>
       </div>
     </div>
   ),
@@ -112,10 +104,7 @@ function PostPage() {
         {/* Header */}
         <header className="hero-bg border-b border-border">
           <div className="container-page max-w-3xl py-14 md:py-20">
-            <Link
-              to="/posts"
-              className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-primary mb-6"
-            >
+            <Link to="/posts" className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-primary mb-6">
               <ArrowRight className="h-4 w-4" /> جميع المقالات
             </Link>
             <div className="flex flex-wrap gap-2 mb-4">
@@ -166,6 +155,8 @@ function PostPage() {
           </div>
         </div>
       </article>
+
+      <TodayMatchesRail variant="article" max={8} />
 
       <SiteFooter />
     </div>

@@ -96,6 +96,7 @@ export const getWorldCupMatches = createServerFn({ method: "GET" }).handler(asyn
   return { matches };
 });
 
+
 export interface WCStanding {
   rank: number;
   team: string;
@@ -150,3 +151,4 @@ export const getWorldCupStandings = createServerFn({ method: "GET" }).handler(as
   }));
   return { standings };
 });
+

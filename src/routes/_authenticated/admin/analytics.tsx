@@ -30,11 +30,7 @@ function AdminAnalytics() {
               حالة الفهرسة، الكلمات المفتاحية، النقرات والظهور في نتائج البحث.
             </p>
             <Button asChild variant="outline" className="gap-2">
-              <a
-                href="https://search.google.com/search-console"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <a href="https://search.google.com/search-console" target="_blank" rel="noopener noreferrer">
                 <ExternalLink className="h-4 w-4" />
                 فتح GSC
               </a>
@@ -50,7 +46,9 @@ function AdminAnalytics() {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
-            <p className="text-sm text-muted-foreground">مؤشرات الأداء والفهرسة على محرك Bing.</p>
+            <p className="text-sm text-muted-foreground">
+              مؤشرات الأداء والفهرسة على محرك Bing.
+            </p>
             <Button asChild variant="outline" className="gap-2">
               <a href="https://www.bing.com/webmasters/" target="_blank" rel="noopener noreferrer">
                 <ExternalLink className="h-4 w-4" />
